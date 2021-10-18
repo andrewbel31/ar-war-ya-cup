@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -68,7 +69,10 @@ class GameView(
 
     private val progressView = root.findViewById<View>(R.id.progress_view)
     private val shotButton = root.findViewById<Button>(R.id.fire_button).apply {
-        setOnClickListener { events.accept(Event.ShotClicked) }
+        setOnClickListener {
+            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            events.accept(Event.ShotClicked)
+        }
     }
 
     private var dialog: AlertDialog? = null

@@ -16,11 +16,8 @@
 
 package com.andreibelous.arwar;
 
-import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -30,7 +27,6 @@ import android.media.Image;
 import android.media.Image.Plane;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -40,18 +36,13 @@ import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.andreibelous.arwar.camera.CameraConnectionFragment;
 import com.andreibelous.arwar.camera.LegacyCameraConnectionFragment;
 
 import java.nio.ByteBuffer;
-
-import kotlin.Unit;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -71,7 +62,6 @@ public abstract class CameraActivity extends AppCompatActivity
     private int yRowStride;
     private Runnable postInferenceCallback;
     private Runnable imageConverter;
-    private CameraActivityDelegate delegate;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -80,12 +70,7 @@ public abstract class CameraActivity extends AppCompatActivity
 
         setContentView(R.layout.tfe_od_activity_camera);
 
-        delegate =
-            new CameraActivityDelegate(this,
-                () -> {
-                    setFragment();
-                    return Unit.INSTANCE;
-                });
+
     }
 
     protected int[] getRgbBytes() {
@@ -242,22 +227,6 @@ public abstract class CameraActivity extends AppCompatActivity
         if (handler != null) {
             handler.post(r);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-        final int requestCode,
-        @NonNull final String[] permissions,
-        @NonNull final int[] grantResults
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        delegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        delegate.onActivityResult(requestCode, resultCode, data);
     }
 
     // Returns true if the device supports the required hardware level, or better.

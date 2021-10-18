@@ -27,6 +27,7 @@ class CameraActivityDelegate(
 
     private val disposables = CompositeDisposable()
     private val locationDataSource by lazy { LocationDataSource(activity) }
+    private val orientationDataSource by lazy { OrientationDataSource(activity) { locationDataSource.location } }
     private val sessionDataSource = SessionDataSource()
     private val lifecycle = activity.lifecycle.apply {
         subscribe(
@@ -36,6 +37,7 @@ class CameraActivityDelegate(
             }
         )
     }
+    private var gameFeature: GameFeature? = null
     private var dialog: AlertDialog? = null
     private val permissions =
         arrayOf(
@@ -45,13 +47,12 @@ class CameraActivityDelegate(
         )
 
     init {
-        val orientationDataSource =
-            OrientationDataSource(activity) { locationDataSource.location }
 
         val wm = activity.getSystemService(Context.WINDOW_SERVICE)?.cast<WindowManager>()
         orientationDataSource.currentScreenOrientation = wm?.defaultDisplay?.orientation ?: 0
 
         val feature = GameFeature(sessionDataSource, locationDataSource, orientationDataSource)
+            .also { gameFeature = it }
         val view = GameView(activity, { orientationDataSource.heading })
 
         Binder(CreateDestroyBinderLifecycle(lifecycle)).apply {
@@ -136,6 +137,19 @@ class CameraActivityDelegate(
     private fun dismissDialog() {
         dialog?.dismiss()
         dialog = null
+    }
+
+    // runs in bg thread
+    fun tryGuessPlayerName(): String? {
+        val state = gameFeature?.state ?: return null
+        val visiblePlayer =
+            findPlayerInMap(
+                heading = orientationDataSource.heading,
+                myId = state.myId,
+                players = state.session?.players,
+                epsilon = 0.0001
+            )
+        return visiblePlayer?.name
     }
 
     private companion object {

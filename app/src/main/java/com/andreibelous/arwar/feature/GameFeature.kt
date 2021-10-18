@@ -9,7 +9,7 @@ import com.andreibelous.arwar.data.model.Player
 import com.andreibelous.arwar.data.model.Session
 import com.andreibelous.arwar.feature.GameFeature.News
 import com.andreibelous.arwar.feature.GameFeature.Wish
-import com.andreibelous.arwar.findPlayerToShot
+import com.andreibelous.arwar.findPlayerInMap
 import com.andreibelous.arwar.toObservable
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.Bootstrapper
@@ -185,7 +185,13 @@ class GameFeature(
 
         private fun tryShot(state: GameState): Observable<Effect> {
             val currentAngle = orientationDataSource.heading ?: return Observable.empty()
-            val playerToShot = findPlayerToShot(currentAngle, state.myId, state.session?.players)
+            val playerToShot =
+                findPlayerInMap(
+                    heading = currentAngle,
+                    myId = state.myId,
+                    players = state.session?.players,
+                    epsilon = 0.001
+                )
             return if (playerToShot != null && state.session?.id != null) {
                 sessionDataSource
                     .updatePlayer(state.session.id.toString(), playerToShot.copy(alive = false))

@@ -94,6 +94,10 @@ class SessionDataSource {
             val activeRef = dataBase.getReference("${session.id}/active")
             activeRef.setValue(session.active)
 
+            // clear players
+            val players = dataBase.getReference("${session.id}/players")
+            players.setValue(null)
+
             for (player in session.players) {
                 val playerRef = dataBase.getReference("${session.id}/players/${player.id}")
                 playerRef.setValue(player)

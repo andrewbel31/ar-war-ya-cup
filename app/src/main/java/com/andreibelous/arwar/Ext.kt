@@ -121,11 +121,14 @@ fun View.hideKeyboard() {
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
 }
 
-fun findPlayerToShot(heading: Float?, myId: Int?, players: List<Player>?): Player? {
+fun findPlayerInMap(
+    heading: Float?,
+    myId: Int?,
+    players: List<Player>?,
+    epsilon: Double
+): Player? {
     heading ?: return null
     val me = players?.firstOrNull { it.id == myId } ?: return null
-
-    val epsilon = 0.001
 
     players.forEach { other ->
         val myLoc = me.location ?: return null
@@ -139,8 +142,8 @@ fun findPlayerToShot(heading: Float?, myId: Int?, players: List<Player>?): Playe
                     lon2 = otherLoc.lng
                 )
 
-            val dx = diff * cos(heading)
-            val dy = diff * sin(heading)
+            val dx = diff * cos(heading) / 111_111
+            val dy = diff * sin(heading) / 111_111
 
             val newPoint =
                 Location(
