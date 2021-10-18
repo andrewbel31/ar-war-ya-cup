@@ -40,6 +40,7 @@ class GameFeature(
         object Shot : Wish
         object HandleCloseClicked : Wish
         object FinishMyGame : Wish
+        object ShowSessionInfo : Wish
     }
 
     sealed interface News {
@@ -47,6 +48,7 @@ class GameFeature(
         object ConfirmCloseRequested : News
         object Finish : News
         data class ErrorHappened(val throwable: Throwable) : News
+        data class ShowSessionInfo(val session: Session?) : News
     }
 
     private sealed interface Action {
@@ -67,6 +69,7 @@ class GameFeature(
         object ConfirmCloseRequested : Effect
         object Finish : Effect
         data class ErrorHappened(val throwable: Throwable) : Effect
+        data class ShowSessionInfoRequested(val session: Session?) : Effect
     }
 
     private class ActorImpl(
@@ -110,7 +113,10 @@ class GameFeature(
                         Observable.empty()
                     }
                 }
-
+                is Wish.ShowSessionInfo ->
+                    Effect
+                        .ShowSessionInfoRequested(state.session)
+                        .toObservable()
             }
 
         private fun startNewSession(
@@ -216,7 +222,8 @@ class GameFeature(
                 is Effect.LoadingStarted -> state.copy(isLoading = true)
                 is Effect.ConfirmCloseRequested,
                 is Effect.Finish,
-                is Effect.ErrorHappened -> state
+                is Effect.ErrorHappened,
+                is Effect.ShowSessionInfoRequested -> state
             }
     }
 
@@ -238,6 +245,7 @@ class GameFeature(
                 is Effect.ConfirmCloseRequested -> News.ConfirmCloseRequested
                 is Effect.Finish -> News.Finish
                 is Effect.ErrorHappened -> News.ErrorHappened(effect.throwable)
+                is Effect.ShowSessionInfoRequested -> News.ShowSessionInfo(effect.session)
                 else -> null
             }
     }

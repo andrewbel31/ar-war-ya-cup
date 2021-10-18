@@ -134,7 +134,7 @@ fun findPlayerInMap(
         val myLoc = me.location ?: return null
         val otherLoc = other.location ?: return null
         if (other != me) {
-            val diff =
+            val distance =
                 getDistanceFromLatLonInMeters(
                     lat1 = myLoc.lat,
                     lat2 = otherLoc.lat,
@@ -142,8 +142,8 @@ fun findPlayerInMap(
                     lon2 = otherLoc.lng
                 )
 
-            val dx = diff * cos(heading) / 111_111
-            val dy = diff * sin(heading) / 111_111
+            val dy = distance * cos(heading) / 111_111
+            val dx = distance * sin(heading) / 111_111
 
             val newPoint =
                 Location(

@@ -38,6 +38,7 @@ class GameView(
         object ShotClicked : Event
         object CloseClicked : Event
         object FinishGameClicked : Event
+        object ShowInfoClicked : Event
     }
 
     private val miniMapView =
@@ -60,6 +61,15 @@ class GameView(
 
     private val buttonClose = root.findViewById<View>(R.id.button_close).apply {
         setOnClickListener { events.accept(Event.CloseClicked) }
+        background = RippleDrawable(
+            ColorStateList.valueOf(Color.WHITE),
+            null,
+            ShapeDrawable(OvalShape())
+        )
+    }
+
+    private val buttonInfo = root.findViewById<View>(R.id.button_info).apply {
+        setOnClickListener { events.accept(Event.ShowInfoClicked) }
         background = RippleDrawable(
             ColorStateList.valueOf(Color.WHITE),
             null,
@@ -133,7 +143,50 @@ class GameView(
                     Toast.LENGTH_LONG
                 ).show()
             }
+            is Action.ShowInfoDialog -> showInfoDialog(action.session)
         }
+    }
+
+    private fun showInfoDialog(session: Session?) {
+        dismissDialog()
+        AlertDialog.Builder(root)
+            .setTitle("Session info")
+            .setMessage(session.toText())
+            .setPositiveButton("закрыть") { _, _ -> }
+            .setCancelable(true)
+            .create()
+            .also { dialog = it }
+            .show()
+    }
+
+    private fun Session?.toText(): String {
+        if (this == null) {
+            return "Нет активной сессии"
+        }
+
+        val sb = StringBuilder()
+
+        sb.append("ID Сессии: $id")
+            .append("\n")
+            .append("Количество игроков: ${players.size}")
+            .append("\n")
+            .append("\n")
+
+        for (player in players) {
+            sb.append("Игрок - ${player.name}")
+                .append("\n")
+                .append("id = ${player.id}")
+                .append("\n")
+                .append("alive = ${player.alive}")
+                .append("\n")
+                .append("location = ${player.location}")
+                .append("\n")
+                .append("\n")
+        }
+
+        sb.append("\n")
+
+        return sb.toString()
     }
 
     private fun showConfirmCloseDialog() {
@@ -156,7 +209,8 @@ class GameView(
     }
 
     private fun dismissDialog() {
-
+        dialog?.dismiss()
+        dialog = null
     }
 
     sealed interface Action {
@@ -164,6 +218,7 @@ class GameView(
         object ShowConfirmCloseDialog : Action
         object Close : Action
         data class HandleError(val throwable: Throwable) : Action
+        data class ShowInfoDialog(val session: Session?) : Action
     }
 }
 

@@ -10,5 +10,6 @@ object NewsToViewAction : (GameFeature.News) -> GameView.Action {
             is GameFeature.News.ConfirmCloseRequested -> GameView.Action.ShowConfirmCloseDialog
             is GameFeature.News.Finish -> GameView.Action.Close
             is GameFeature.News.ErrorHappened -> GameView.Action.HandleError(news.throwable)
+            is GameFeature.News.ShowSessionInfo -> GameView.Action.ShowInfoDialog(news.session)
         }
 }

@@ -14,5 +14,6 @@ object UiEventToWish : (GameView.Event) -> GameFeature.Wish? {
             is GameView.Event.ShotClicked -> GameFeature.Wish.Shot
             is GameView.Event.CloseClicked -> GameFeature.Wish.HandleCloseClicked
             is GameView.Event.FinishGameClicked -> GameFeature.Wish.FinishMyGame
+            is GameView.Event.ShowInfoClicked -> GameFeature.Wish.ShowSessionInfo
         }
 }
