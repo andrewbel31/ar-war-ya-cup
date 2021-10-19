@@ -1,5 +1,7 @@
 # Приложение Войнушка для Yandex Cup
 
+## Демо работы https://youtu.be/aQ0wsHXIW2U
+
 ### Как работает приложение?
 
 #### API 21+, MVI + RxJava2 + Custom views + TensorFlow
