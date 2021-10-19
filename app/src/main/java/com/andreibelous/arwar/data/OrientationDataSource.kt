@@ -1,10 +1,12 @@
-package com.andreibelous.arwar
+package com.andreibelous.arwar.data
 
 import android.content.Context
 import android.hardware.*
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.andreibelous.arwar.cast
 import com.andreibelous.arwar.data.model.Location
+import com.andreibelous.arwar.subscribe
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin

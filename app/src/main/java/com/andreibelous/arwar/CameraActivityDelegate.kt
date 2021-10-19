@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.andreibelous.arwar.data.LocationDataSource
+import com.andreibelous.arwar.data.OrientationDataSource
 import com.andreibelous.arwar.data.SessionDataSource
 import com.andreibelous.arwar.feature.GameFeature
 import com.andreibelous.arwar.mapper.NewsToViewAction

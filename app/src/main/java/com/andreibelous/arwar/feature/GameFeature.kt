@@ -1,6 +1,6 @@
 package com.andreibelous.arwar.feature
 
-import com.andreibelous.arwar.OrientationDataSource
+import com.andreibelous.arwar.data.OrientationDataSource
 import com.andreibelous.arwar.RandomGenerator
 import com.andreibelous.arwar.data.LocationDataSource
 import com.andreibelous.arwar.data.SessionDataSource
