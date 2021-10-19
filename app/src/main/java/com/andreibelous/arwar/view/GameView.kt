@@ -5,9 +5,8 @@ import android.graphics.Color
 import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
-import android.graphics.drawable.shapes.RectShape
-import android.view.HapticFeedbackConstants
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -78,17 +77,10 @@ class GameView(
     }
 
     private val progressView = root.findViewById<View>(R.id.progress_view)
-    private val buttonFire = root.findViewById<TextView>(R.id.fire_button).apply {
+    private val buttonFire = root.findViewById<Button>(R.id.fire_button).apply {
         setOnClickListener {
             events.accept(Event.ShotClicked)
-            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
         }
-
-        background = RippleDrawable(
-            ColorStateList.valueOf(Color.WHITE),
-            null,
-            ShapeDrawable(RectShape())
-        )
     }
 
     private var dialog: AlertDialog? = null
